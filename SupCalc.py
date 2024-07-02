@@ -3,9 +3,10 @@ from tkinter import Tk  # Tkinter module for creating GUI applications
 import customtkinter as ctk # CustomTkinter for modern and customizable GUI components
 from PIL import Image, ImageTk  # PIL (Python Imaging Library) for image processing tasks
 from customtkinter import CTkImage  # CustomTkinter's image widget for displaying images
-from tkcalendar import Calendar # TkCalendar for calendar widget in Tkinter applications
 from tkinter import StringVar # StringVar from Tkinter for creating variable wrappers
+from tkinter import messagebox # Tkinter's messagebox module for displaying alerts
 import math
+import re
 # Initialize the main application window
 root = Tk()
 root.title("SupCalc")
@@ -25,9 +26,13 @@ root.configure(bg="#ffffff")
 title_label = ctk.CTkLabel(root, text="SUPCALC", font=("Frutiger", 50, "bold"), bg_color="#ffffff")
 title_label.pack(padx=20, pady=30)
 
+# Open and resize the original image using PIL
 original_image = Image.open("Assets/nhs-royal-surrey-logo.png").resize((160, 116))
+
+# Convert the PIL image to a format that can be used with tkinter (and customtkinter)
 image_tk = ImageTk.PhotoImage(original_image)
 
+# Use the converted image with CTkLabel
 nhs_logo_label = ctk.CTkLabel(root, image=image_tk, bg_color="#ffffff", text="")
 nhs_logo_label.place(x=15, y=5.2)
 
@@ -88,12 +93,48 @@ field_shape_drop_down.place(x=186, y=324)
 dose_per_fraction_label = ctk.CTkLabel(root, text="Dose per Fraction:", font=("Frutiger", 18), bg_color="#ffffff")
 dose_per_fraction_label.place(x=364, y=279)
 
+
+def validate_dob_format(event):
+    # Regular expression to match the dd/mm/yyyy format
+    pattern = r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/\d{4}$"
+    dob = dob_entry.get()
+    
+    # Check if the input matches the pattern
+    if re.match(pattern, dob) or dob == "":
+        # If it matches, or the entry is empty (allowing deletion), do nothing
+        pass
+    else:
+        # If it doesn't match, show an error and clear the input
+        messagebox.showerror("Invalid Date", "Date must be in dd/mm/yyyy format")
+        dob_entry.delete(0, "end")
+
+# Bind the validation function to the dob_entry widget
+dob_entry.bind("<FocusOut>", validate_dob_format)
+
+def add_unit_gy(event):
+    # Get the current value from the entry widget
+    current_value = prescribed_dose_var.get()
+    # Check if the value does not end with 'Gy'
+    if not current_value.strip().endswith("Gy"):
+        # Append 'Gy' to the value
+        new_value = current_value + " Gy"
+        # Update the StringVar with the new value
+        prescribed_dose_var.set(new_value)
+
+# Bind the FocusOut event to the prescribed_dose_entry widget
+prescribed_dose_entry.bind("<FocusOut>", add_unit_gy)
+
 def calculate_dose_per_fraction(*args):
     try:
-        prescribed_dose = float(prescribed_dose_entry.get())
-        number_of_fractions = float(number_of_fractions_entry.get())
+        # Extract the numeric part from the prescribed_dose_entry, removing "Gy" if present
+        prescribed_dose_str = prescribed_dose_entry.get().replace("Gy", "").strip()
+        prescribed_dose = float(prescribed_dose_str)
+        
+        number_of_fractions_str = number_of_fractions_entry.get().strip()
+        number_of_fractions = float(number_of_fractions_str)
+        
         dose_per_fraction = prescribed_dose / number_of_fractions
-        dose_per_fraction_var.set(f"{dose_per_fraction:.3f}")  # Set the calculated value with formatting
+        dose_per_fraction_var.set(f"{dose_per_fraction:.3f} Gy")  # Set the calculated value with formatting and append "Gy"
     except ValueError:
         dose_per_fraction_var.set("")  # Clear the value if there is an error in conversion
 
@@ -121,7 +162,6 @@ def get_values():
 
 dose_per_fraction_output = ctk.CTkLabel(root, font=("Frutiger", 18), bg_color="#ffffff", textvariable=dose_per_fraction_var)
 dose_per_fraction_output.place(x=523.3, y=279)
-
 
 
 enter_button = ctk.CTkButton(root, text="Calculate", fg_color="#005EB8", text_color="#ffffff", font=("Frutiger", 18), command=lambda: [get_values(), open_result_window()])
