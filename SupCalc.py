@@ -1,18 +1,15 @@
-# Import necessary libraries
-from tkinter import Tk  # Tkinter module for creating GUI applications
-import customtkinter as ctk # CustomTkinter for modern and customizable GUI components
-from PIL import Image, ImageTk  # PIL (Python Imaging Library) for image processing tasks
-from customtkinter import CTkImage  # CustomTkinter's image widget for displaying images
-from tkinter import StringVar # StringVar from Tkinter for creating variable wrappers
-from tkinter import messagebox # Tkinter's messagebox module for displaying alerts
-import math
+from tkinter import *
+import customtkinter as ctk
+from PIL import Image, ImageTk 
+from customtkinter import CTkImage  
+from math import *
 import re
-# Initialize the main application window
+
 root = Tk()
 root.title("SupCalc")
 
-app_width = 720
-app_height = 580
+app_width = 1000
+app_height = 900
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -29,148 +26,121 @@ title_label.pack(padx=20, pady=30)
 light_image = Image.open("Assets/nhs-royal-surrey-logo.png")
 dark_image = Image.open("Assets/nhs-royal-surrey-logo.png")
 
-image_tk = ctk.CTkImage(light_image=light_image, dark_image=dark_image, size=(160, 116))
+image_tk = ctk.CTkImage(light_image=light_image, dark_image=dark_image, size=(232.5, 160))
 
-# Use the converted image with CTkLabel
 nhs_logo_label = ctk.CTkLabel(root, image=image_tk, bg_color="#ffffff", text="")
-nhs_logo_label.place(x=15, y=5.2)
+nhs_logo_label.place(x=16.9, y=11.9)
 
-patient_firstname_label = ctk.CTkLabel(root, text="Patient First Name:", font=("Frutiger", 18), bg_color="#ffffff")
-patient_firstname_label.place(x=15, y=144)
+entry_box_x_1 = 320
+entry_box_x_2 = 740
 
-patient_firstname_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE")
-patient_firstname_entry.place(x=186, y=144)
+row_1_y = 190
+row_2_y = 250
+row_3_y = 310
+row_4_y = 370
+row_5_y = 430
+row_6_y = 490
 
-patient_surname_label = ctk.CTkLabel(root, text="Patient Surname:", font=("Frutiger", 18), bg_color="#ffffff")
-patient_surname_label.place(x=374, y=144)
+patient_firstname_label = ctk.CTkLabel(root, text="Patient First Name:", font=("Frutiger", 21), bg_color="#ffffff")
+patient_firstname_label.place(x=120, y=row_1_y)
 
-patient_surname_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE")
-patient_surname_entry.place(x=523.3, y=144)
+patient_firstname_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE")
+patient_firstname_entry.place(x=entry_box_x_1, y=row_1_y)
 
-date_of_birth_label = ctk.CTkLabel(root, text="Date of Birth:", font=("Frutiger", 18), bg_color="#ffffff")
-date_of_birth_label.place(x=60.6, y=189)
+patient_surname_label = ctk.CTkLabel(root, text="Patient Surname:", font=("Frutiger", 21), bg_color="#ffffff")
+patient_surname_label.place(x=550, y=190)
 
-dob_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE")
-dob_entry.place(x=186, y=189)
+patient_surname_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE")
+patient_surname_entry.place(x=entry_box_x_2, y=row_1_y)
 
-hospital_number_label = ctk.CTkLabel(root, text="Hospital Number:", font=("Frutiger", 18), bg_color="#ffffff")
-hospital_number_label.place(x=370, y=189)
+date_of_birth_label = ctk.CTkLabel(root, text="Date of Birth:", font=("Frutiger", 21), bg_color="#ffffff")
+date_of_birth_label.place(x=174, y=row_2_y)
 
-hospital_number_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE")
-hospital_number_entry.place(x=523.3, y=189)
+dob_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE")
+dob_entry.place(x=entry_box_x_1, y=row_2_y)
 
-prescription_label = ctk.CTkLabel(root, text="Prescription Name:", font=("Frutiger", 18), bg_color="#ffffff")
-prescription_label.place(x=15.8, y=234)
+hospital_number_label = ctk.CTkLabel(root, text="Hospital Number:", font=("Frutiger", 21), bg_color="#ffffff")
+hospital_number_label.place(x=549, y=row_2_y)
 
-prescription_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE")
-prescription_entry.place(x=186, y=234)
+hospital_number_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE")
+hospital_number_entry.place(x=entry_box_x_2, y=row_2_y)
+
+prescription_label = ctk.CTkLabel(root, text="Prescription Name:", font=("Frutiger", 21), bg_color="#ffffff")
+prescription_label.place(x=120, y=row_3_y)
+
+prescription_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE")
+prescription_entry.place(x=entry_box_x_1, y=row_3_y)
 
 number_of_fractions_var = StringVar()
 prescribed_dose_var = StringVar()
 dose_per_fraction_var = StringVar()
 
-prescribed_dose_label = ctk.CTkLabel(root, text="Prescribed Dose:", font=("Frutiger", 18), bg_color="#ffffff")
-prescribed_dose_label.place(x=374, y=234)
+prescribed_dose_label = ctk.CTkLabel(root, text="Prescribed Dose:", font=("Frutiger", 21), bg_color="#ffffff")
+prescribed_dose_label.place(x=550, y=row_3_y)
 
-prescribed_dose_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE", textvariable=prescribed_dose_var)
-prescribed_dose_entry.place(x=523.3, y=234)
+prescribed_dose_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE", textvariable=prescribed_dose_var)
+prescribed_dose_entry.place(x=entry_box_x_2, y=row_3_y)
 
-number_of_fractions_label = ctk.CTkLabel(root, text="Number of Fractions:", font=("Frutiger", 18), bg_color="#ffffff")
-number_of_fractions_label.place(x=0, y=279)
+number_of_fractions_label = ctk.CTkLabel(root, text="Number of Fractions:", font=("Frutiger", 21), bg_color="#ffffff")
+number_of_fractions_label.place(x=100, y=row_4_y)
 
-number_of_fractions_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE", textvariable=number_of_fractions_var)
-number_of_fractions_entry.place(x=186, y=279)
+number_of_fractions_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE", textvariable=number_of_fractions_var)
+number_of_fractions_entry.place(x=entry_box_x_1, y=row_4_y)
 
-field_shape_label = ctk.CTkLabel(root, text="Field Shape:", font=("Frutiger", 18), bg_color="#ffffff")
-field_shape_label.place(x=70, y=324)
+dose_per_fraction_label = ctk.CTkLabel(root, text="Dose per Fraction:", font=("Frutiger", 21), bg_color="#ffffff")
+dose_per_fraction_label.place(x=540, y=row_4_y)
+
+dose_per_fraction_output = ctk.CTkLabel(root, font=("Frutiger", 21), bg_color="#ffffff", textvariable=dose_per_fraction_var)
+dose_per_fraction_output.place(x=entry_box_x_2, y=row_4_y)
+
+field_shape_label = ctk.CTkLabel(root, text="Field Shape:", font=("Frutiger", 21), bg_color="#ffffff")
+field_shape_label.place(x=178.5, y=row_5_y)
 
 shape_list = ["Square", "Circle", "Elipse", "Rectangle"]
 
-field_shape_drop_down = ctk.CTkComboBox(root, values=shape_list, border_color="#0072CE", font=("Frutiger", 18), button_color="#005EB8")
-field_shape_drop_down.place(x=186, y=324)
+width_var = StringVar()
+length_var = StringVar()
+equivalent_shape_var = StringVar()
 
-dose_per_fraction_label = ctk.CTkLabel(root, text="Dose per Fraction:", font=("Frutiger", 18), bg_color="#ffffff")
-dose_per_fraction_label.place(x=364, y=279)
+field_shape_drop_down = ctk.CTkComboBox(root, values=shape_list, border_color="#0072CE", font=("Frutiger", 21), button_color="#005EB8")
+field_shape_drop_down.place(x=entry_box_x_1, y=row_5_y)
 
-def validate_entry_content(event):
-    entry_widget = event.widget
-    text = entry_widget.get()
-    new_text = ''.join(filter(str.isalpha, text))
-    if text != new_text:
-        entry_widget.delete(0, "end")  # Remove current text
-        entry_widget.insert(0, new_text)  # Insert validated text
+width_label = ctk.CTkLabel(root, text="Width:", font=("Frutiger", 21), bg_color="#ffffff")
+width_label.place(x=550, y=row_5_y)
 
-# Assuming patient_firstname_entry and patient_surname_entry are already created as CTkEntry widgets
-patient_firstname_entry.bind("<KeyRelease>", validate_entry_content)
-patient_surname_entry.bind("<KeyRelease>", validate_entry_content)
+width_entry = ctk.CTkEntry(root, font=("Frutiger", 21), bg_color="#ffffff", border_color="#0072CE", width=80, textvariable=width_var)
+width_entry.place(x=620, y=row_5_y)
 
-def validate_nhs_number(nhs_number):
-    cleaned_nhs_number = nhs_number.replace(" ", "")
-    if len(cleaned_nhs_number) != 10 or not cleaned_nhs_number.isdigit():
-        return False
-    digits = [int(digit) for digit in cleaned_nhs_number]
-    digits_reversed = digits[::-1]
-    sum_of_products = sum(weight * digit for weight, digit in enumerate(digits_reversed[1:], 2))
-    remainder = sum_of_products % 11
-    check_digit = (11 - remainder) % 11
-    return check_digit == digits_reversed[0]
+length_label = ctk.CTkLabel(root, text="Length:", font=("Frutiger", 21), bg_color="#ffffff")
+length_label.place(x=720, y=row_5_y)
 
-# Step 2: Define a function to be called when the entry loses focus or a button is pressed
-def on_validate_nhs_number():
-    nhs_number = hospital_number_entry.get()
-    if validate_nhs_number(nhs_number):
-        print("NHS number is valid.")
-    else:
-        print("NHS number is invalid.")
-        messagebox.showerror("Invalid NHS Number", "The NHS number is invalid. Please enter a valid NHS number.")
-        
-hospital_number_entry.bind("<FocusOut>", lambda event: on_validate_nhs_number())
+length_entry = ctk.CTkEntry(root, font=("Frutiger", 18), bg_color="#ffffff", border_color="#0072CE", width=80, textvariable=length_var)
+length_entry.place(x=800, y=row_5_y)
 
-def validate_numeric_entry(event):
-    entry_widget = event.widget
-    text = entry_widget.get()
-    # Allow only digits and a single decimal point
-    new_text = ''.join([char for char in text if char.isdigit() or char == "."])
-    # Remove extra decimal points if present
-    if new_text.count('.') > 1:
-        new_text = new_text.replace(".", "", new_text.count('.') - 1)
-    if text != new_text:
-        entry_widget.delete(0, "end")  # Remove current text
-        entry_widget.insert(0, new_text)  # Insert validated text
+equivalent_shape_label = ctk.CTkLabel(root, text="Eq.Square/Circle Diameter:", font=("Frutiger", 21), bg_color="#ffffff")
+equivalent_shape_label.place(x=200, y=row_6_y)
 
-# Assuming prescribed_dose_entry and number_of_fractions_entry are already created as CTkEntry widgets
-prescribed_dose_entry.bind("<KeyRelease>", validate_numeric_entry)
-number_of_fractions_entry.bind("<KeyRelease>", validate_numeric_entry)
+equivalent_shape_output = ctk.CTkLabel(root, font=("Frutiger", 21), bg_color="#ffffff", textvariable=equivalent_shape_var)
+equivalent_shape_output.place(x=500, y=row_6_y)
 
-def validate_dob_format(event):
-    # Regular expression to match the dd/mm/yyyy format
-    pattern = r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/\d{4}$"
-    dob = dob_entry.get()
-    
-    # Check if the input matches the pattern
-    if re.match(pattern, dob) or dob == "":
-        # If it matches, or the entry is empty (allowing deletion), do nothing
-        pass
-    else:
-        # If it doesn't match, show an error and clear the input
-        messagebox.showerror("Invalid Date", "Date must be in dd/mm/yyyy format")
-        dob_entry.delete(0, "end")
-
-# Bind the validation function to the dob_entry widget
-dob_entry.bind("<FocusOut>", validate_dob_format)
-
-def add_unit_gy(event):
-    # Get the current value from the entry widget
-    current_value = prescribed_dose_var.get()
-    # Check if the value does not end with 'Gy'
-    if not current_value.strip().endswith("Gy"):
-        # Append 'Gy' to the value
-        new_value = current_value + " Gy"
-        # Update the StringVar with the new value
-        prescribed_dose_var.set(new_value)
-
-# Bind the FocusOut event to the prescribed_dose_entry widget
-prescribed_dose_entry.bind("<FocusOut>", add_unit_gy)
+def calculate_equivalent_shape(*args):
+    selected_shape = field_shape_drop_down.get()
+    if selected_shape == "Square":
+        width = width_entry.get()
+        equivalent_shape_var.set(width)
+    elif selected_shape == "Circle":
+        diameter = width_entry.get()
+        equivalent_shape_var.set(diameter)
+    elif selected_shape == "Elipse":
+        a = width_entry.get()
+        b = length_entry.get()
+        equivalent_diameter = sqrt(a * b)
+        equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
+    elif selected_shape == "Rectangle":
+        a = width_entry.get()
+        b = length_entry.get()
+        equivalent_diameter = sqrt(a * b)
+        equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
 
 def calculate_dose_per_fraction(*args):
     try:
@@ -189,34 +159,20 @@ def calculate_dose_per_fraction(*args):
 prescribed_dose_entry.bind("<KeyRelease>", calculate_dose_per_fraction)
 number_of_fractions_entry.bind("<KeyRelease>", calculate_dose_per_fraction)
 
-def get_values():
-    patient_surname = patient_surname_entry.get()
-    patient_firstname = patient_firstname_entry.get()
-    prescription = prescription_entry.get()
-    dob = dob_entry.get()
-    prescribed_dose = prescribed_dose_entry.get()
-    number_of_fractions = number_of_fractions_entry.get()
-    field_shape = field_shape_drop_down.get()
-    hospital_number = hospital_number_entry.get()
+def sync_dimensions(*args):
+    selected_shape = field_shape_drop_down.get()
+    if selected_shape in ["Circle", "Square"]:
+        if width_entry.get() != length_entry.get():
+            if args and args[0] == 'width':
+                length_entry.delete(0, "end")
+                length_entry.insert(0, width_entry.get())
+            else:
+                width_entry.delete(0, "end")
+                width_entry.insert(0, length_entry.get())
 
-    print(f"Patient Surname: {patient_surname}")
-    print(f"Patient First Name: {patient_firstname}")
-    print(f"Prescription Name: {prescription}")
-    print(f"Date of Birth: {dob}")
-    print(f"Prescribed Dose: {prescribed_dose}")
-    print(f"Number of Fractions: {number_of_fractions}")
-    print(f"Field Size: {field_shape}")
-    print(f"Hospital Number: {hospital_number}")
-
-dose_per_fraction_output = ctk.CTkLabel(root, font=("Frutiger", 18), bg_color="#ffffff", textvariable=dose_per_fraction_var)
-dose_per_fraction_output.place(x=523.3, y=279)
-
-
-enter_button = ctk.CTkButton(root, text="Calculate", fg_color="#005EB8", text_color="#ffffff", font=("Frutiger", 18), command=lambda: [get_values(), open_result_window()])
-enter_button.pack(side='bottom', anchor='s', pady=50)
-
-def open_result_window():
-    result_window = ctk.CTkToplevel(root, title="Results", width=500, height=500, bg_color="#ffffff")
-    result_window.geometry(f'+{center_x}+{center_y}')
+# Bind the sync_dimensions function to changes in the shape selection, width, and length entries
+field_shape_drop_down.bind("<<ComboboxSelected>>", lambda event: sync_dimensions())
+width_entry.bind("<KeyRelease>", lambda event: sync_dimensions('width'))
+length_entry.bind("<KeyRelease>", lambda event: sync_dimensions('length'))
 
 root.mainloop()
