@@ -26,11 +26,10 @@ root.configure(bg="#ffffff")
 title_label = ctk.CTkLabel(root, text="SUPCALC", font=("Frutiger", 50, "bold"), bg_color="#ffffff")
 title_label.pack(padx=20, pady=30)
 
-# Open and resize the original image using PIL
-original_image = Image.open("Assets/nhs-royal-surrey-logo.png").resize((160, 116))
+light_image = Image.open("Assets/nhs-royal-surrey-logo.png")
+dark_image = Image.open("Assets/nhs-royal-surrey-logo.png")
 
-# Convert the PIL image to a format that can be used with tkinter (and customtkinter)
-image_tk = ImageTk.PhotoImage(original_image)
+image_tk = ctk.CTkImage(light_image=light_image, dark_image=dark_image, size=(160, 116))
 
 # Use the converted image with CTkLabel
 nhs_logo_label = ctk.CTkLabel(root, image=image_tk, bg_color="#ffffff", text="")
@@ -93,6 +92,55 @@ field_shape_drop_down.place(x=186, y=324)
 dose_per_fraction_label = ctk.CTkLabel(root, text="Dose per Fraction:", font=("Frutiger", 18), bg_color="#ffffff")
 dose_per_fraction_label.place(x=364, y=279)
 
+def validate_entry_content(event):
+    entry_widget = event.widget
+    text = entry_widget.get()
+    new_text = ''.join(filter(str.isalpha, text))
+    if text != new_text:
+        entry_widget.delete(0, "end")  # Remove current text
+        entry_widget.insert(0, new_text)  # Insert validated text
+
+# Assuming patient_firstname_entry and patient_surname_entry are already created as CTkEntry widgets
+patient_firstname_entry.bind("<KeyRelease>", validate_entry_content)
+patient_surname_entry.bind("<KeyRelease>", validate_entry_content)
+
+def validate_nhs_number(nhs_number):
+    cleaned_nhs_number = nhs_number.replace(" ", "")
+    if len(cleaned_nhs_number) != 10 or not cleaned_nhs_number.isdigit():
+        return False
+    digits = [int(digit) for digit in cleaned_nhs_number]
+    digits_reversed = digits[::-1]
+    sum_of_products = sum(weight * digit for weight, digit in enumerate(digits_reversed[1:], 2))
+    remainder = sum_of_products % 11
+    check_digit = (11 - remainder) % 11
+    return check_digit == digits_reversed[0]
+
+# Step 2: Define a function to be called when the entry loses focus or a button is pressed
+def on_validate_nhs_number():
+    nhs_number = hospital_number_entry.get()
+    if validate_nhs_number(nhs_number):
+        print("NHS number is valid.")
+    else:
+        print("NHS number is invalid.")
+        messagebox.showerror("Invalid NHS Number", "The NHS number is invalid. Please enter a valid NHS number.")
+        
+hospital_number_entry.bind("<FocusOut>", lambda event: on_validate_nhs_number())
+
+def validate_numeric_entry(event):
+    entry_widget = event.widget
+    text = entry_widget.get()
+    # Allow only digits and a single decimal point
+    new_text = ''.join([char for char in text if char.isdigit() or char == "."])
+    # Remove extra decimal points if present
+    if new_text.count('.') > 1:
+        new_text = new_text.replace(".", "", new_text.count('.') - 1)
+    if text != new_text:
+        entry_widget.delete(0, "end")  # Remove current text
+        entry_widget.insert(0, new_text)  # Insert validated text
+
+# Assuming prescribed_dose_entry and number_of_fractions_entry are already created as CTkEntry widgets
+prescribed_dose_entry.bind("<KeyRelease>", validate_numeric_entry)
+number_of_fractions_entry.bind("<KeyRelease>", validate_numeric_entry)
 
 def validate_dob_format(event):
     # Regular expression to match the dd/mm/yyyy format
