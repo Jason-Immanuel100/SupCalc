@@ -96,7 +96,7 @@ dose_per_fraction_output.place(x=entry_box_x_2, y=row_4_y)
 field_shape_label = ctk.CTkLabel(root, text="Field Shape:", font=("Frutiger", 21), bg_color="#ffffff")
 field_shape_label.place(x=178.5, y=row_5_y)
 
-shape_list = ["Square", "Circle", "Elipse", "Rectangle"]
+shape_list = ["Square", "Circle", "Ellipse", "Rectangle"]
 
 width_var = StringVar()
 length_var = StringVar()
@@ -125,22 +125,29 @@ equivalent_shape_output.place(x=500, y=row_6_y)
 
 def calculate_equivalent_shape(*args):
     selected_shape = field_shape_drop_down.get()
-    if selected_shape == "Square":
-        width = width_entry.get()
-        equivalent_shape_var.set(width)
-    elif selected_shape == "Circle":
-        diameter = width_entry.get()
-        equivalent_shape_var.set(diameter)
-    elif selected_shape == "Elipse":
-        a = width_entry.get()
-        b = length_entry.get()
-        equivalent_diameter = sqrt(a * b)
-        equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
-    elif selected_shape == "Rectangle":
-        a = width_entry.get()
-        b = length_entry.get()
-        equivalent_diameter = sqrt(a * b)
-        equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
+    try:
+        if selected_shape == "Square":
+            width = float(width_entry.get())
+            equivalent_shape_var.set(f"{width:.3f}")
+        elif selected_shape == "Circle":
+            diameter = float(width_entry.get())
+            equivalent_shape_var.set(f"{diameter:.3f}")
+        elif selected_shape == "Ellipse":
+            a = float(width_entry.get())
+            b = float(length_entry.get())
+            equivalent_diameter = sqrt(a * b)
+            equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
+        elif selected_shape == "Rectangle":
+            a = float(width_entry.get())
+            b = float(length_entry.get())
+            equivalent_diameter = sqrt(a * b)
+            equivalent_shape_var.set(f"{equivalent_diameter:.3f}")
+    except ValueError:
+        equivalent_shape_var.set("Invalid input")
+
+field_shape_drop_down.bind("<<ComboboxSelected>>", calculate_equivalent_shape)
+width_entry.bind("<KeyRelease>", calculate_equivalent_shape)
+length_entry.bind("<KeyRelease>", calculate_equivalent_shape)
 
 def calculate_dose_per_fraction(*args):
     try:
